@@ -48,9 +48,6 @@ jobs:
           
           # Extract unique subdirectories under common-services
           folders=$(echo "$changed_files" | grep "^common-services/" | cut -d'/' -f1-2 | sort -u | tr '\n' ',' | sed 's/,$//')
-        #   if [ -z "$folders" ]; then
-        #     folders="common-services"
-        #   fi
           
           echo "folders=${folders}" >> $GITHUB_OUTPUT
           echo "Changed folders: ${folders}"
