@@ -9,7 +9,7 @@ resource "aws_s3_bucket" "argocd_bucket" {
 resource "aws_s3_bucket_versioning" "argocd_bucket_versioning" {
   bucket = aws_s3_bucket.argocd_bucket.id
   versioning_configuration {
-    status = "Disabled"
+    status = "Enabled"
   }
 }
 
