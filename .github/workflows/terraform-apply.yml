@@ -19,10 +19,11 @@ on:
       terraform_folder:
         description: 'Terraform folder to deploy'
         required: true
-        default: 'common-services'
+        default: 'common-services/argocd'
         type: choice
         options:
-        - common-services
+        - common-services/argocd
+        - common-services/testing-s3
 
 env:
   TF_VERSION: '1.13.4'
@@ -47,7 +48,7 @@ jobs:
           changed_files=$(git diff --name-only HEAD~1 HEAD)
           
           # Extract unique subdirectories under common-services
-          folders=$(echo "$changed_files" | grep "^common-services/" | cut -d'/' -f1-2 | sort -u | tr '\n' ',' | sed 's/,$//')
+          folders=$(echo "$changed_files" | grep "^common-services/" | cut -d'/' -f1-2 | sort -u | jq -R -s -c 'split("\n")[:-1]')
           
           echo "folders=${folders}" >> $GITHUB_OUTPUT
           echo "Changed folders: ${folders}"
@@ -58,7 +59,7 @@ jobs:
     needs: get-changed-folders
     strategy:
       matrix:
-        folder: ${{ fromJson(format('["{0}"]', needs.get-changed-folders.outputs.folders)) }}
+        folder: ${{ fromJson(needs.get-changed-folders.outputs.folders) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -87,7 +88,7 @@ jobs:
     needs: [terraform-validate, get-changed-folders]
     strategy:
       matrix:
-        folder: ${{ fromJson(format('["{0}"]', needs.get-changed-folders.outputs.folders)) }}
+        folder: ${{ fromJson(needs.get-changed-folders.outputs.folders) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -125,7 +126,7 @@ jobs:
 #     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 #     strategy:
 #       matrix:
-#         folder: ${{ fromJson(format('["{0}"]', needs.get-changed-folders.outputs.folders)) }}
+#         folder: ${{ fromJson(needs.get-changed-folders.outputs.folders) }}
 #     environment: ${{ github.event.inputs.environment }}
 #     steps:
 #       - name: Checkout
@@ -161,6 +162,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
     environment: ${{ github.event.inputs.environment }}
+    strategy:
+      matrix:
+        folder: [${{ github.event.inputs.terraform_folder }}]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -179,12 +183,16 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ${{ github.event.inputs.terraform_folder }}
+        working-directory: ${{ matrix.folder }}
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ${{ matrix.folder }}
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: ${{ github.event.inputs.terraform_folder }}
+        working-directory: ${{ matrix.folder }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-        working-directory: ${{ github.event.inputs.terraform_folder }}
+        working-directory: ${{ matrix.folder }}
