@@ -164,7 +164,7 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
     strategy:
       matrix:
-        folder: [${{ github.event.inputs.terraform_folder }}]
+        folder: ${{ github.event.inputs.terraform_folder }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
