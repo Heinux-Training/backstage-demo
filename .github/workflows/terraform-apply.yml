@@ -159,9 +159,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
     environment: ${{ github.event.inputs.environment }}
-    strategy:
-      matrix:
-        folder: ${{ github.event.inputs.terraform_folder }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -180,16 +177,16 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ${{ matrix.folder }}
+        working-directory: ${{ github.event.inputs.terraform_folder }}
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ${{ matrix.folder }}
+        working-directory: ${{ github.event.inputs.terraform_folder }}
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: ${{ matrix.folder }}
+        working-directory: ${{ github.event.inputs.terraform_folder }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-        working-directory: ${{ matrix.folder }}
+        working-directory: ${{ github.event.inputs.terraform_folder }}
