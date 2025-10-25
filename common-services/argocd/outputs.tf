@@ -25,7 +25,7 @@ output "argocd_server_service_namespace" {
 # Instructions for accessing ArgoCD
 output "argocd_access_instructions" {
   description = "Instructions for accessing ArgoCD"
-  value = <<-EOT
+  value       = <<-EOT
     To access ArgoCD:
     
     1. Get the LoadBalancer URL:
@@ -52,7 +52,7 @@ output "argocd_access_instructions" {
 # ArgoCD CLI login command
 output "argocd_cli_login_command" {
   description = "Command to login to ArgoCD CLI"
-  value = <<-EOT
+  value       = <<-EOT
     # Get the server URL first:
     ARGOCD_SERVER=$(kubectl get svc argocd-server -n ${kubernetes_namespace.argocd.metadata[0].name} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
     

@@ -41,21 +41,21 @@ resource "helm_release" "argocd" {
   values = [
     yamlencode({
       global = {
-        domain = "argocd.${var.environment}.local"  # You'll need to configure DNS
+        domain = "argocd.${var.environment}.local" # You'll need to configure DNS
       }
-      
+
       server = {
         service = {
           type        = var.argocd_server_service_type
           annotations = var.argocd_server_service_annotations
         }
-        
+
         # Enable insecure mode for development (not recommended for production)
         insecure = var.argocd_server_insecure
-        
+
         # Extra arguments for the server
         extraArgs = var.argocd_server_extra_args
-        
+
         # Resource limits and requests
         resources = {
           limits = {
@@ -68,7 +68,7 @@ resource "helm_release" "argocd" {
           }
         }
       }
-      
+
       # ArgoCD application controller configuration
       controller = {
         resources = {
@@ -82,7 +82,7 @@ resource "helm_release" "argocd" {
           }
         }
       }
-      
+
       # ArgoCD repo server configuration
       repoServer = {
         resources = {
@@ -96,17 +96,17 @@ resource "helm_release" "argocd" {
           }
         }
       }
-      
+
       # ArgoCD dex server configuration (for SSO)
       dex = {
-        enabled = false  # Disable dex for now, can be enabled later for SSO
+        enabled = false # Disable dex for now, can be enabled later for SSO
       }
-      
+
       # ArgoCD notifications configuration
       notifications = {
-        enabled = false  # Disable notifications for now
+        enabled = false # Disable notifications for now
       }
-      
+
       # ArgoCD application set controller
       applicationSet = {
         enabled = true
