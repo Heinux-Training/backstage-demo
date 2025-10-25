@@ -33,6 +33,7 @@ jobs:
   get-changed-folders:
     name: Get Changed Folders
     runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_dispatch'
     outputs:
       folders: ${{ steps.changes.outputs.folders }}
     steps:
@@ -56,6 +57,7 @@ jobs:
   terraform-validate:
     name: Terraform Validate
     runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_dispatch'
     needs: get-changed-folders
     strategy:
       matrix:
@@ -84,6 +86,7 @@ jobs:
   terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_dispatch'
     environment: dev
     needs: [terraform-validate, get-changed-folders]
     strategy:

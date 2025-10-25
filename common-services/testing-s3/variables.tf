@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "bucket_name" {
   description = "Name of the S3 bucket for ArgoCD"
   type        = string
-  default     = "hhw-backstage-demo-argocd-bucket-2"
+  default     = "hhw-backstage-demo-argocd-bucket-1"
 }
 
 variable "environment" {
