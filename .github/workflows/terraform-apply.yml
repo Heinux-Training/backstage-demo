@@ -83,6 +83,7 @@ jobs:
   terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
     needs: [terraform-validate, get-changed-folders]
     strategy:
       matrix:
