@@ -1,5 +1,8 @@
 replicaCount: 3
 
+serviceAccount:
+  create: false
+  
 ingress:
   enabled: true
   ingressClassName: alb

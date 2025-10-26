@@ -1,8 +1,11 @@
-apiVersion: argoproj.io/v1alpha1
+apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
   name: backstage-demo-argocd
+  namespace: argocd
   labels:
     project: backstage-demo
     environment: dev
 spec: {}
+  # sourceNamespaces:
+  # - '*'
