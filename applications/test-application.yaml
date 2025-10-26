@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-nginx
+  namespace: nginx
+spec:
+  project: default
+  sources:
+  - repoURL: https://charts.bitnami.com/bitnami
+    chart: nginx
+    targetRevision: 15.14.0
+    path: application-values/nginx
+    helm:
+      valueFiles:
+      - $values/application-values/nginx/values.yaml
+  - repoURL: git@github.com:Heinux-Training/backstage-demo.git
+    targetRevision: main
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: test-nginx
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        argocd.argoproj.io/managed-by: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "1"

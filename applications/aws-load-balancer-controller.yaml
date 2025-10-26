@@ -11,9 +11,18 @@ spec:
     server: https://kubernetes.default.svc
     namespace: kube-system
   source:
-    repoURL: git@github.com:Heinux-Training/backstage-demo.git
-    targetRevision: master
-    path: application-files/aws-load-balancer-controller
+    chart: aws-load-balancer-controller
+    repoURL: https://aws.github.io/eks-charts
+    targetRevision: 1.14.1
+    helm:
+      skipCrds: true
+      values: |
+        clusterName: hhw-backstage-demo
+        region: us-east-1
+        vpcId: vpc-035bcce55e1bcfb6e
+        serviceAccount:
+          create: false
+          name: aws-load-balancer-controller
   syncPolicy:
     automated:
       prune: true

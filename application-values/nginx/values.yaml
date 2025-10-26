@@ -1,0 +1,9 @@
+replicaCount: 3
+
+ingress:
+  enabled: true
+  ingressClassName: alb
+  hostname: test.example.com
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
