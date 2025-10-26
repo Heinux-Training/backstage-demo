@@ -1,0 +1,17 @@
+namespace: kube-system
+resources:
+- crds.yaml
+
+helmCharts:
+- name: aws-load-balancer-controller
+  repo: https://aws.github.io/eks-charts
+  version: 1.10.1 
+  releaseName: aws-load-balancer-controller
+  namespace: kube-system
+  valuesInline:
+    clusterName: 
+    serviceAccount:
+      create: false  
+      name: aws-load-balancer-controller 
+    region: us-east-1
+    vpcId: vpc-035bcce55e1bcfb6e
