@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1beta1
+kind: Application
+metadata:
+  name: actions-runner-controller
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+  - repoURL: https://actions-runner-controller.github.io/actions-runner-controller
+    chart: actions-runner-controller
+    targetRevision: 0.23.7
+    helm:
+      valueFiles:
+      - $values/application-values/actions-runner-controller/values.yaml
+  - repoURL: git@github.com:Heinux-Training/backstage-demo.git
+    targetRevision: main
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: github-runners
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        argocd.argoproj.io/managed-by: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "1"
