@@ -6,6 +6,9 @@ image:
 serviceAccount:
   create: false
 
+service:
+  type: ClusterIP
+
 ingress:
   enabled: true
   ingressClassName: alb
