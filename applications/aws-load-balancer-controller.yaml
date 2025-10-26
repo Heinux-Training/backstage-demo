@@ -6,6 +6,7 @@ metadata:
     project: backstage-demo
     environment: dev
 spec:
+  project: default
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system
