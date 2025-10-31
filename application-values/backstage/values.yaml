@@ -30,7 +30,8 @@ fullnameOverride: ""
 clusterDomain: cluster.local
 
 # -- Labels to add to all deployed objects
-commonLabels: {}
+commonLabels:
+  env: demo
 
 # -- Annotations to add to all deployed objects
 commonAnnotations: {}
@@ -56,16 +57,25 @@ diagnosticMode:
 ingress:
 
   # -- Enable the creation of the ingress resource
-  enabled: false
+  enabled: true
 
   # -- Name of the IngressClass cluster resource which defines which controller will implement the resource (e.g nginx)
-  className: ""
+  className: alb
 
   # -- Additional annotations for the Ingress resource
-  annotations: {}
+  annotations:
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: >-
+      arn:aws:acm:us-east-1:757641753030:certificate/0ae13de8-4480-4031-aaae-82c781834d9d
+    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS13-1-2-2021-06
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/group.name: backstage-demo
 
   # -- Hostname to be used to expose the route to access the backstage application (e.g: backstage.IP.nip.io)
-  host: ""
+  host: backstage.heinux-training.org
 
   # -- List of additional hostnames to be covered with this ingress record (e.g. a CNAME)
   # <!-- E.g.
@@ -421,7 +431,7 @@ networkPolicy:
 postgresql:
 
   # -- Switch to enable or disable the PostgreSQL helm chart
-  enabled: false
+  enabled: true
 
   # -- Change default PostgreSQL image location (workaround for https://github.com/bitnami/charts/issues/35164)
   image:
@@ -432,10 +442,10 @@ postgresql:
   auth:
 
     # -- Name for a custom user to create
-    username: bn_backstage
+    username: demo_user
 
     # -- Password for the custom user to create
-    password: ""
+    password: "demopassword"
 
     # -- Name of existing secret to use for PostgreSQL credentials
     existingSecret: ""
