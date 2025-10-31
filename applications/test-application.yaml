@@ -4,7 +4,7 @@ metadata:
   name: test-nginx
   namespace: argocd
   finalizers:
-  - resources-finalizer.argocd.argoproj.io
+  - resources-finalizer.argocd.argoproj.io/
 spec:
   project: default
   sources:
@@ -20,7 +20,7 @@ spec:
     ref: values
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: nginx
   syncPolicy:
     automated:
       prune: true
