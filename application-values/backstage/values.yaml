@@ -64,7 +64,7 @@ ingress:
 
   # -- Additional annotations for the Ingress resource
   annotations:
-    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/certificate-arn: >-
       arn:aws:acm:us-east-1:757641753030:certificate/0ae13de8-4480-4031-aaae-82c781834d9d
