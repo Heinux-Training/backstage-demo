@@ -355,9 +355,9 @@ backstage:
         rules:
         - allow: [User, Group]
 
-      ## Uncomment these lines to add more example data
-      - type: url
-        target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
+      # ## Uncomment these lines to add more example data
+      # - type: url
+      #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
     permission:
       enabled: true
 
