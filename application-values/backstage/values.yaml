@@ -182,7 +182,8 @@ backstage:
   extraEnvVarsCM: []
 
   # -- Backstage container environment variables from existing Secrets
-  extraEnvVarsSecrets: []
+  extraEnvVarsSecrets:
+  - backstage-postgres
 
   # -- Backstage container additional ports
   extraPorts: []
@@ -295,6 +296,13 @@ backstage:
       baseUrl: https://backstage.heinux-training.org
       listen:
         port: 7007
+      database:
+        client: pg
+        connection:
+          host: ${POSTGRES_HOST}
+          port: ${POSTGRES_PORT}
+          user: ${POSTGRES_USER}
+          password: ${POSTGRES_PASSWORD}
       cors:
         origin: https://backstage.heinux-training.org
         methods: [GET, HEAD, PATCH, POST, PUT, DELETE]

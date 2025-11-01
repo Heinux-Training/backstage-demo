@@ -92,6 +92,11 @@ jobs:
     strategy:
       matrix:
         folder: ${{ fromJson(needs.get-changed-folders.outputs.folders) }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ env.AWS_REGION }}
+      TF_VAR_environment: dev
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -159,6 +164,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
     environment: ${{ github.event.inputs.environment }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ env.AWS_REGION }}
+      TF_VAR_environment: ${{ github.event.inputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
