@@ -367,6 +367,12 @@ backstage:
         target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
         rules:
         - allow: [User, Group]
+
+      - type: url
+        target: https://github.com/backstage/software-templates/blob/main/scaffolder-templates/create-react-app/template.yaml
+        rules:
+        - allow: [Template]
+      
     permission:
       enabled: true
 
