@@ -16,9 +16,22 @@ spec:
   type: team
   children: []
 ---
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-group
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: admins
+  links:
+  - url: https://github.com/orgs/Heinux-Training/teams/admin
+    title: GitHub Admin team
+    icon: dashboard
+spec:
+  type: team
+  children: []
+---
 apiVersion: backstage.io/v1alpha1
 kind: User
 metadata:
   name: heinhtetwin
 spec:
-  memberOf: [guests]
+  memberOf: [admins]

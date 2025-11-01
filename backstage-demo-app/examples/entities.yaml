@@ -27,7 +27,7 @@ metadata:
 spec:
   type: grpc
   lifecycle: experimental
-  owner: guests
+  owner: admins
   system: examples
   definition: |
     syntax = "proto3";

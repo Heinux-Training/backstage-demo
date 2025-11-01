@@ -3,10 +3,10 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: example-nodejs-template
-  title: Example Node.js Template
+  title: Demo NodeJS Repo
   description: An example template for the scaffolder that creates a simple Node.js service
 spec:
-  owner: user:guest
+  owner: team:admins
   type: service
 
   # These parameters are used to generate the input form in the frontend, and are
