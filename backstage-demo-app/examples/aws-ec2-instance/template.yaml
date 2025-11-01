@@ -1,0 +1,298 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: aws-ec2-instance
+  title: Create AWS EC2 Instance
+  description: Provision an EC2 instance in AWS using Terraform
+  tags:
+    - aws
+    - ec2
+    - terraform
+    - compute
+spec:
+  owner: platform-team
+  type: resource
+  
+  parameters:
+    - title: Instance Configuration
+      required:
+        - instanceName
+        - instanceType
+        - amiType
+        - owner
+      properties:
+        instanceName:
+          title: Instance Name
+          type: string
+          description: Unique name for the EC2 instance
+          pattern: '^[a-z][a-z0-9-]*$'
+          maxLength: 32
+          ui:autofocus: true
+        
+        description:
+          title: Description
+          type: string
+          description: Purpose of this instance
+          default: EC2 instance for development
+        
+        instanceType:
+          title: Instance Type
+          type: string
+          description: EC2 instance size
+          enum:
+            - t3.micro
+            - t3.small
+            - t3.medium
+            - t3.large
+            - t3.xlarge
+            - t3a.micro
+            - t3a.small
+            - t3a.medium
+            - c5.large
+            - c5.xlarge
+            - m5.large
+            - m5.xlarge
+          enumNames:
+            - 't3.micro (2 vCPU, 1 GB) - $0.0104/hr'
+            - 't3.small (2 vCPU, 2 GB) - $0.0208/hr'
+            - 't3.medium (2 vCPU, 4 GB) - $0.0416/hr'
+            - 't3.large (2 vCPU, 8 GB) - $0.0832/hr'
+            - 't3.xlarge (4 vCPU, 16 GB) - $0.1664/hr'
+            - 't3a.micro (2 vCPU, 1 GB) - $0.0094/hr'
+            - 't3a.small (2 vCPU, 2 GB) - $0.0188/hr'
+            - 't3a.medium (2 vCPU, 4 GB) - $0.0376/hr'
+            - 'c5.large (2 vCPU, 4 GB) - Compute Optimized'
+            - 'c5.xlarge (4 vCPU, 8 GB) - Compute Optimized'
+            - 'm5.large (2 vCPU, 8 GB) - General Purpose'
+            - 'm5.xlarge (4 vCPU, 16 GB) - General Purpose'
+          default: t3.small
+        
+        amiType:
+          title: Operating System
+          type: string
+          description: Choose OS for the instance
+          enum:
+            - amazon-linux-2023
+            - ubuntu-22.04
+          enumNames:
+            - Amazon Linux 2023
+            - Ubuntu 22.04 LTS
+          default: amazon-linux-2023
+        
+        rootVolumeSize:
+          title: Root Volume Size (GB)
+          type: integer
+          description: Size of root EBS volume
+          default: 20
+          minimum: 8
+          maximum: 500
+        
+        environment:
+          title: Environment
+          type: string
+          enum:
+            - development
+            - staging
+            - production
+          default: development
+        
+        owner:
+          title: Team Owner
+          type: string
+          description: Team responsible for this instance
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: [Group, User]
+
+    - title: Network Configuration
+      required:
+        - awsRegion
+        - vpcId
+        - subnetId
+        - keyName
+      properties:
+        awsRegion:
+          title: AWS Region
+          type: string
+          description: AWS region to deploy
+          enum:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - eu-west-1
+            - eu-central-1
+            - ap-southeast-1
+            - ap-northeast-1
+          enumNames:
+            - 'US East (N. Virginia)'
+            - 'US East (Ohio)'
+            - 'US West (N. California)'
+            - 'US West (Oregon)'
+            - 'EU (Ireland)'
+            - 'EU (Frankfurt)'
+            - 'Asia Pacific (Singapore)'
+            - 'Asia Pacific (Tokyo)'
+          default: us-east-1
+        
+        vpcId:
+          title: VPC ID
+          type: string
+          description: VPC where instance will be launched
+          pattern: '^vpc-[a-z0-9]+$'
+          ui:help: 'Example: vpc-0123456789abcdef0'
+        
+        subnetId:
+          title: Subnet ID
+          type: string
+          description: Subnet for the instance
+          pattern: '^subnet-[a-z0-9]+$'
+          ui:help: 'Example: subnet-0123456789abcdef0'
+        
+        keyName:
+          title: SSH Key Pair Name
+          type: string
+          description: Existing EC2 key pair name (without .pem)
+          ui:help: 'Must exist in AWS already'
+        
+        enablePublicIp:
+          title: Enable Public IP
+          type: boolean
+          description: Assign public IP address
+          default: true
+        
+        enableElasticIp:
+          title: Enable Elastic IP
+          type: boolean
+          description: Attach Elastic IP (static public IP)
+          default: false
+        
+        enableHttp:
+          title: Open HTTP Port (80)
+          type: boolean
+          description: Allow HTTP traffic
+          default: false
+        
+        enableHttps:
+          title: Open HTTPS Port (443)
+          type: boolean
+          description: Allow HTTPS traffic
+          default: false
+
+    - title: Repository Configuration
+      required:
+        - repoOwner
+        - repoName
+      properties:
+        repoOwner:
+          title: Repository Owner
+          type: string
+          description: GitHub organization or username
+          default: my-org
+        
+        repoName:
+          title: Repository Name
+          type: string
+          description: Name for the new repository
+          default: ec2-${{ parameters.instanceName }}
+
+  steps:
+    - id: fetch-template
+      name: Fetch Terraform Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          instanceName: ${{ parameters.instanceName }}
+          description: ${{ parameters.description }}
+          instanceType: ${{ parameters.instanceType }}
+          amiType: ${{ parameters.amiType }}
+          rootVolumeSize: ${{ parameters.rootVolumeSize }}
+          environment: ${{ parameters.environment }}
+          owner: ${{ parameters.owner }}
+          awsRegion: ${{ parameters.awsRegion }}
+          vpcId: ${{ parameters.vpcId }}
+          subnetId: ${{ parameters.subnetId }}
+          keyName: ${{ parameters.keyName }}
+          enablePublicIp: ${{ parameters.enablePublicIp }}
+          enableElasticIp: ${{ parameters.enableElasticIp }}
+          enableHttp: ${{ parameters.enableHttp }}
+          enableHttps: ${{ parameters.enableHttps }}
+          repoOwner: ${{ parameters.repoOwner }}
+          repoName: ${{ parameters.repoName }}
+
+    - id: publish
+      name: Create GitHub Repository
+      action: publish:github
+      input:
+        repoUrl: github.com?owner=${{ parameters.repoOwner }}&repo=${{ parameters.repoName }}
+        description: EC2 instance ${{ parameters.instanceName }} - ${{ parameters.description }}
+        defaultBranch: main
+        protectDefaultBranch: false
+        repoVisibility: private
+
+    - id: create-secrets
+      name: Create GitHub Secrets
+      action: github:actions:secrets:create
+      input:
+        repoUrl: github.com?owner=${{ parameters.repoOwner }}&repo=${{ parameters.repoName }}
+        secrets:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ parameters.awsRegion }}
+
+    - id: register
+      name: Register Component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}
+      - title: GitHub Actions
+        url: ${{ steps.publish.output.remoteUrl }}/actions
+    text:
+      - title: Next Steps
+        content: |
+          ## 🚀 EC2 Instance Setup Complete!
+          
+          ### What was created:
+          - ✅ GitHub repository with Terraform code
+          - ✅ GitHub Actions workflow for deployment
+          - ✅ AWS credentials configured as secrets
+          
+          ### Next steps:
+          
+          1. **Review the code**: ${{ steps.publish.output.remoteUrl }}
+          
+          2. **Customize if needed**: Edit `terraform/main.tf`
+          
+          3. **Deploy the instance**:
+             - Push to `main` branch to trigger deployment
+             - Or manually run: `terraform apply` in the `terraform/` directory
+          
+          4. **Monitor deployment**: ${{ steps.publish.output.remoteUrl }}/actions
+          
+          5. **Connect to instance**:
+            \`\`\`bash
+             # Get SSH command from Terraform outputs
+             cd terraform
+             terraform output ssh_command
+            \`\`\`
+          
+          ### AWS Resources:
+          - Region: ${{ parameters.awsRegion }}
+          - Instance Type: ${{ parameters.instanceType }}
+          - OS: ${{ parameters.amiType }}
+          
+          ### Important:
+          - Remember to update S3 bucket name in `terraform/main.tf` backend config
+          - Ensure the SSH key pair exists in AWS
+          - Check security group rules match your requirements

@@ -128,7 +128,7 @@ backstage:
     repository: h4l5g7w3/backstage-demo
 
     # -- Backstage image tag (immutable tags are recommended)
-    tag: latest
+    tag: v1
 
     # -- Backstage image digest (digest takes precedence over image tag)
     digest: ""
@@ -350,6 +350,11 @@ backstage:
       # Local example template
       - type: file
         target: ./examples/template/template.yaml
+        rules:
+        - allow: [Template]
+
+      - type: file
+        target: ./examples/aws-ec2-instance/template.yaml
         rules:
         - allow: [Template]
       

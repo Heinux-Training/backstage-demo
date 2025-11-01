@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ${{ values.instanceName }}
+  description: ${{ values.description }}
+  annotations:
+    github.com/project-slug: ${{ values.repoOwner }}/${{ values.repoName }}
+    aws.com/ec2-instance-id: ${INSTANCE_ID}
+  tags:
+    - ec2
+    - aws
+    - ${{ values.environment }}
+  links:
+    - url: https://console.aws.amazon.com/ec2/v2/home?region=${{ values.awsRegion }}#Instances:instanceId=${INSTANCE_ID}
+      title: AWS Console
+      icon: cloud
+spec:
+  type: compute
+  owner: ${{ values.owner }}
+  lifecycle: ${{ values.environment }}
+  system: infrastructure
