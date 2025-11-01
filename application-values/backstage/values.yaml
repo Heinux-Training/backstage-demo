@@ -320,7 +320,7 @@ backstage:
             clientSecret: 449005e75971b0406e3bf540cd30b31c9ec78764
             signIn:
               resolvers:
-              - resolver: emailLocalPartMatchingUserEntityName
+              - resolver: usernameMatchingUserEntityName
                 dangerouslyAllowSignInWithoutUserInCatalog: true
     integrations:
       github:
