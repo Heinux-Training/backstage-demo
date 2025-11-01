@@ -293,6 +293,10 @@ backstage:
       baseUrl: https://backstage.heinux-training.org
       listen:
         port: 7007
+      cors:
+        origin: https://backstage.heinux-training.org
+        methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+        credentials: true
 
   # -- Affinity for pod assignment
   # <br /> Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
