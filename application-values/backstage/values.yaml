@@ -295,7 +295,7 @@ backstage:
     backend:
       baseUrl: https://backstage.heinux-training.org
       listen:
-        port: 7007
+        port: 443
       database:
         client: pg
         connection:
