@@ -373,6 +373,11 @@ backstage:
         rules:
         - allow: [Template]
       
+      - type: url
+        target: https://github.com/backstage/demo/blob/master/demo-template/template/template.yaml
+        rules:
+        - allow: [Template]
+
     permission:
       enabled: true
 
