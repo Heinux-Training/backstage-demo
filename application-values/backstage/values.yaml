@@ -121,10 +121,10 @@ backstage:
   image:
 
     # -- Backstage image registry
-    # registry: ghcr.io
+    registry: public.ecr.aws
 
     # -- Backstage image repository
-    repository: public.ecr.aws/h4l5g7w3/backstage-demo
+    repository: h4l5g7w3/backstage-demo
 
     # -- Backstage image tag (immutable tags are recommended)
     tag: latest
