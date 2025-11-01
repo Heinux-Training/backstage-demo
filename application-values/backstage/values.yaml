@@ -121,10 +121,10 @@ backstage:
   image:
 
     # -- Backstage image registry
-    registry: ghcr.io
+    # registry: ghcr.io
 
     # -- Backstage image repository
-    repository: backstage/backstage
+    repository: public.ecr.aws/h4l5g7w3/backstage-demo
 
     # -- Backstage image tag (immutable tags are recommended)
     tag: latest
@@ -289,6 +289,8 @@ backstage:
     app:
       title: Backstage Demo
       baseUrl: https://backstage.heinux-training.org
+    organization:
+      name: Backstage Demo
     backend:
       baseUrl: https://backstage.heinux-training.org
       listen:
@@ -297,6 +299,21 @@ backstage:
         origin: https://backstage.heinux-training.org
         methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
         credentials: true
+    auth:
+      environment: production
+      providers:
+        guest: {}
+        github:
+          production:
+            clientId: Ov23li6GdVfpexqjLWlS
+            clientSecret: 449005e75971b0406e3bf540cd30b31c9ec78764
+            signIn:
+              resolvers:
+              - resolver: usernameMatchingUserEntityName
+    integrations:
+      github:
+      - host: github.com
+        token: ${GITHUB_TOKEN}
 
   # -- Affinity for pod assignment
   # <br /> Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
@@ -442,7 +459,7 @@ networkPolicy:
 postgresql:
 
   # -- Switch to enable or disable the PostgreSQL helm chart
-  enabled: true
+  enabled: false
 
   # -- Change default PostgreSQL image location (workaround for https://github.com/bitnami/charts/issues/35164)
   image:
