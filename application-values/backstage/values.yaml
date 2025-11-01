@@ -14,7 +14,7 @@ global:
   # -- Global Docker registry secret names as an array
   # </br> E.g. `imagePullSecrets: [myRegistryKeySecretName]`
   imagePullSecrets: []
-  storageClass: gp2
+  storageClassName: gp2
 # -- Common parameters
 
 # -- Override Kubernetes version
@@ -285,7 +285,14 @@ backstage:
   #   app:
   #     baseUrl: https://somedomain.tld
   # -- Generates ConfigMap and configures it in the Backstage pods
-  appConfig: {}
+  appConfig:
+    app:
+      title: Backstage Demo
+      baseUrl: https://backstage.heinux-training.org
+    backend:
+      baseUrl: https://backstage.heinux-training.org
+      listen:
+        port: 7007
 
   # -- Affinity for pod assignment
   # <br /> Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
