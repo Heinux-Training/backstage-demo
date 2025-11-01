@@ -291,6 +291,9 @@ backstage:
     app:
       title: Backstage Demo
       baseUrl: https://backstage.heinux-training.org
+    routes:
+      bindings:
+        scaffolder.registerComponent: false
     organization:
       name: Backstage Demo
     backend:
@@ -359,6 +362,11 @@ backstage:
       ## Uncomment these lines to add more example data
       - type: url
         target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
+      
+      - type: url
+        target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
+        rules:
+        - allow: [User, Group]
     permission:
       enabled: true
 
